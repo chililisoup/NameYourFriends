@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Permissions;
+using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Logging;
 using NameYourFriends.Hooks;
@@ -16,19 +18,24 @@ public class NameYourFriends : BaseUnityPlugin
 {
     public const string ModID = "chililisoup.nameyourfriends";
     private const string ModName = "Name Your Friends";
-    private const string ModVersion = "1.0";
+    private const string ModVersion = "1.1";
     private new static ManualLogSource Logger { get; set; }
+
+    public static bool DressMySlugcatEnabled;
     
     public void OnEnable()
     {
-        On.RainWorld.OnModsInit += RainWorld_OnModsInit;
         Logger = base.Logger;
+        
+        On.RainWorld.OnModsInit += RainWorld_OnModsInit;
+        On.RainWorld.PostModsInit += RainWorld_PostModsInit;
     }
     
     private bool _isInit;
     private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
     {
         orig(self);
+        
         try
         {
             if (_isInit) return;
@@ -44,5 +51,17 @@ public class NameYourFriends : BaseUnityPlugin
             Logger.LogError($"{ModName} failed to load!");
             Logger.LogError(e);
         }
+    }
+
+    private static void RainWorld_PostModsInit(On.RainWorld.orig_PostModsInit orig, RainWorld self)
+    {
+        orig(self);
+        
+        DressMySlugcatEnabled = ModManager.ActiveMods.Any(x => x.id == "dressmyslugcat");
+    }
+
+    public static string FilterNameString(string name)
+    {
+        return Regex.Replace(name, @"[^ -~]|[<>\\]", "");
     }
 }

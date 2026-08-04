@@ -85,9 +85,9 @@ public class FriendNamingMenu : Dialog
             };
             nameEditBox.OnValueUpdate += (config, value, _) =>
             {
-                var filtered = Regex.Replace(value, "[<>]", "");
+                var filtered = NameYourFriends.FilterNameString(value);
                 if (filtered != value) config.value = filtered;
-                else creature.NYF_SetName(value.IsNullOrWhiteSpace() ? null : value);
+                else creature.NYF_SetName(value);
             };
             scrollbox.AddItemToWrapped(nameEditBox);
             

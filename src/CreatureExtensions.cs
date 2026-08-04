@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using BepInEx;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -19,7 +20,8 @@ internal static class CreatureExtensions
     {
         if (creature == null) return;
         CreatureNameTable.Remove(creature);
-        if (name != null) CreatureNameTable.Add(creature, name);
+        var filtered = name != null ? NameYourFriends.FilterNameString(name) : null;
+        if (!filtered.IsNullOrWhiteSpace()) CreatureNameTable.Add(creature, filtered);
     }
 
     public static bool NYF_HasName(this AbstractCreature creature)
@@ -37,12 +39,9 @@ internal static class CreatureExtensions
     public static Color NYF_GetColor(this AbstractCreature creature)
     {
         var color = creature.realizedCreature.ShortCutColor();
-        var maxColorComponent = color.maxColorComponent * 0.8f;
-        return maxColorComponent > 0f
-            ? new Color(
-                color.r / maxColorComponent,
-                color.g / maxColorComponent,
-                color.b / maxColorComponent
-            ) : Color.white;
+        var maxColorComponent = color.maxColorComponent;
+        return maxColorComponent > 0f ?
+            Color.Lerp(color, color / color.maxColorComponent, 0.8f) :
+            new Color(0.8f, 0.8f, 0.8f);
     }
 }

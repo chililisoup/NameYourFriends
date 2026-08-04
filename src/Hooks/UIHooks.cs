@@ -29,21 +29,19 @@ public static class UIHooks
         if (game.IsArenaSession || game.FirstRealizedPlayer?.room == null)
             return;
 
-        var dmsActive = ModManager.ActiveMods.Any(mod => mod.id == "dressmyslugcat");
-
         var nyfMenuButton = new SimpleButton(
             self,
             self.pages[0],
             "FRIEND NAMING",
             "ENTER_NYF_MENU",
-            dmsActive ?
+            NameYourFriends.DressMySlugcatEnabled ?
                 new Vector2(self.exitButton.pos.x, self.exitButton.pos.y + 38f) :
                 new Vector2(self.continueButton.pos.x, self.continueButton.pos.y + 38f),
             new Vector2(110f, 30f)
         );
         self.pages[0].subObjects.Add(nyfMenuButton);
         
-        if (dmsActive)
+        if (NameYourFriends.DressMySlugcatEnabled)
         {
             nyfMenuButton.nextSelectable[3] = self.exitButton;
             self.exitButton.nextSelectable[1] = nyfMenuButton;
