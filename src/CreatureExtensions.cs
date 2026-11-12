@@ -38,6 +38,7 @@ internal static class CreatureExtensions
 
     public static Color NYF_GetColor(this AbstractCreature creature)
     {
+        if (creature.realizedCreature == null) return Color.white;
         var color = creature.realizedCreature.ShortCutColor();
         var maxColorComponent = color.maxColorComponent;
         return maxColorComponent > 0f ?

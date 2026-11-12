@@ -18,7 +18,7 @@ public class NameYourFriends : BaseUnityPlugin
 {
     public const string ModID = "chililisoup.nameyourfriends";
     private const string ModName = "Name Your Friends";
-    private const string ModVersion = "1.1";
+    private const string ModVersion = "1.1.1";
     private new static ManualLogSource Logger { get; set; }
 
     public static bool DressMySlugcatEnabled;

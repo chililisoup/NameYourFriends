@@ -7,14 +7,14 @@ namespace NameYourFriends;
 public class NameTagsHud(HUD.HUD hud, AbstractCreature abstractPlayer) : HudPart(hud)
 {
     private readonly Dictionary<AbstractCreature, NameTagHudPart> _nameTags = [];
-    public Player RealizedPlayer => abstractPlayer.realizedCreature as Player;
+    public AbstractCreature AbstractPlayer => abstractPlayer;
     public RoomCamera Camera => abstractPlayer.world.game.cameras[0];
     
     public override void Update()
     {
         base.Update();
 
-        var room = RealizedPlayer.abstractCreature.Room;
+        var room = abstractPlayer?.Room;
         if (room == null)
         {
             ClearNameTags();
@@ -22,7 +22,11 @@ public class NameTagsHud(HUD.HUD hud, AbstractCreature abstractPlayer) : HudPart
         }
         
         foreach (var creature in room.creatures
-                     .Where(creature => creature.NYF_HasName() && !_nameTags.ContainsKey(creature))
+                     .Where(creature =>
+                         creature.realizedCreature != null
+                         && creature.NYF_HasName()
+                         && !_nameTags.ContainsKey(creature)
+                         )
                  )
         {
             _nameTags.Add(creature, new NameTagHudPart(this, creature));

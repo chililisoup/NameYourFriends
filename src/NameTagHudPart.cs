@@ -56,9 +56,15 @@ public class NameTagHudPart
     public void Update()
     {
         var creature = _creature.realizedCreature;
-        var player = _owner.RealizedPlayer;
-        var name = creature.abstractCreature.NYF_GetName();
-        if (creature.slatedForDeletetion || creature.room != player.room || name == null)
+        var nullablePlayer = _owner.AbstractPlayer?.realizedCreature;
+        var name = _creature.NYF_GetName();
+        if (
+            creature == null
+            || nullablePlayer is not Player player
+            || creature.slatedForDeletetion
+            || creature.room != player.room
+            || name == null
+            )
         {
             SlatedForDeletion = true;
             return;
